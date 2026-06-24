@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4A259EA42FEBB76D00429068 /* AGENTS.md in Sources */ = {isa = PBXBuildFile; fileRef = 4A259EA32FEBB76000429068 /* AGENTS.md */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		4A259E872FEBB71400429068 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,14 +31,47 @@
 		4A259E792FEBB71200429068 /* EyeControlMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EyeControlMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A259E862FEBB71400429068 /* EyeControlMacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EyeControlMacTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A259E902FEBB71400429068 /* EyeControlMacUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EyeControlMacUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A259EA32FEBB76000429068 /* AGENTS.md */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AGENTS.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		4A259E7B2FEBB71200429068 /* EyeControlMac */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = EyeControlMac;
-			sourceTree = "<group>";
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		4ABD84932FEBB8D2008E6FE7 /* Exceptions for "EyeControlMac" folder in "EyeControlMac" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AppState.swift,
+				Assets.xcassets,
+				ContentView.swift,
+				DesktopControl/ActionExecutor.swift,
+				DesktopControl/PageNavigationController.swift,
+				DesktopControl/ScrollController.swift,
+				DesktopControl/WindowController.swift,
+				EyeControlMacApp.swift,
+				Mock/MockBlinkController.swift,
+				Mock/MockGazeController.swift,
+				Models/ControlMode.swift,
+				Models/EyeCommand.swift,
+				Permissions/AccessibilityPermissionManager.swift,
+				Permissions/CameraPermissionManager.swift,
+				UI/CommandOverlayView.swift,
+				UI/DebugPanelView.swift,
+				UI/FloatingResumeView.swift,
+				Utilities/CooldownManager.swift,
+			);
+			target = 4A259E782FEBB71200429068 /* EyeControlMac */;
 		};
+		4ABD84942FEBB8D2008E6FE7 /* Exceptions for "EyeControlMac" folder in "EyeControlMacUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AppState.swift,
+				Assets.xcassets,
+				ContentView.swift,
+				EyeControlMacApp.swift,
+			);
+			target = 4A259E8F2FEBB71400429068 /* EyeControlMacUITests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
 		4A259E892FEBB71400429068 /* EyeControlMacTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = EyeControlMacTests;
@@ -43,6 +80,15 @@
 		4A259E932FEBB71400429068 /* EyeControlMacUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = EyeControlMacUITests;
+			sourceTree = "<group>";
+		};
+		4ABD848F2FEBB8D1008E6FE7 /* EyeControlMac */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4ABD84932FEBB8D2008E6FE7 /* Exceptions for "EyeControlMac" folder in "EyeControlMac" target */,
+				4ABD84942FEBB8D2008E6FE7 /* Exceptions for "EyeControlMac" folder in "EyeControlMacUITests" target */,
+			);
+			path = EyeControlMac;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,10 +121,11 @@
 		4A259E702FEBB71200429068 = {
 			isa = PBXGroup;
 			children = (
-				4A259E7B2FEBB71200429068 /* EyeControlMac */,
+				4A259EA32FEBB76000429068 /* AGENTS.md */,
 				4A259E892FEBB71400429068 /* EyeControlMacTests */,
 				4A259E932FEBB71400429068 /* EyeControlMacUITests */,
 				4A259E7A2FEBB71200429068 /* Products */,
+				4ABD848F2FEBB8D1008E6FE7 /* EyeControlMac */,
 			);
 			sourceTree = "<group>";
 		};
@@ -106,9 +153,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				4A259E7B2FEBB71200429068 /* EyeControlMac */,
 			);
 			name = EyeControlMac;
 			packageProductDependencies = (
@@ -155,6 +199,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				4A259E932FEBB71400429068 /* EyeControlMacUITests */,
+				4ABD848F2FEBB8D1008E6FE7 /* EyeControlMac */,
 			);
 			name = EyeControlMacUITests;
 			packageProductDependencies = (
@@ -236,6 +281,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4A259EA42FEBB76D00429068 /* AGENTS.md in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
