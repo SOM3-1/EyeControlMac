@@ -25,6 +25,16 @@ final class AppState: ObservableObject {
         isPaused ? "Paused" : "Active"
     }
 
+    func setControlMode(_ mode: ControlMode) {
+        guard mode == .reading || mode == .desktop else {
+            controlMode = mode
+            return
+        }
+
+        controlMode = mode
+        lastBlockedReason = nil
+    }
+
     func select(_ command: EyeCommand) {
         selectedCommand = command
         lastBlockedReason = nil
@@ -42,23 +52,29 @@ final class AppState: ObservableObject {
     }
 
     func canExecute(_ command: EyeCommand) -> Bool {
-        if isPaused {
-            return command == .resume
-        }
-
-        return controlMode.allows(command)
+        permission(for: command).isAllowed
     }
 
-    func blockedReason(for command: EyeCommand) -> String? {
+    func permission(for command: EyeCommand) -> CommandPermission {
         if isPaused && command != .resume {
-            return "Paused Mode blocks all eye-triggered actions except Resume."
+            return .blocked(
+                reason: "Paused Mode blocks all eye-triggered actions except Resume.",
+                kind: .paused
+            )
         }
 
         if !controlMode.allows(command) {
-            return "\(command.title) is not allowed in \(controlMode.title) Mode."
+            return .blocked(
+                reason: "\(command.title) is not allowed in \(controlMode.title) Mode.",
+                kind: .mode
+            )
         }
 
-        return nil
+        return .allowed
+    }
+
+    func blockedReason(for command: EyeCommand) -> String? {
+        permission(for: command).blockedReason
     }
 
     func handleMockDoubleBlink(actionExecutor: ActionExecutor) {
@@ -85,12 +101,6 @@ final class AppState: ObservableObject {
         case .resume:
             isPaused = false
             selectedCommand = .scrollDown
-        case .switchWindow:
-            controlMode = .windowSwitcher
-        case .recalibrate:
-            controlMode = .calibration
-        case .settings:
-            break
         default:
             break
         }
@@ -100,4 +110,36 @@ final class AppState: ObservableObject {
         lastBlockedReason = reason
         lastAction = "Blocked \(command.title)"
     }
+}
+
+enum CommandPermission: Equatable {
+    case allowed
+    case blocked(reason: String, kind: BlockedCommandKind)
+
+    var isAllowed: Bool {
+        self == .allowed
+    }
+
+    var blockedReason: String? {
+        switch self {
+        case .allowed:
+            return nil
+        case .blocked(let reason, _):
+            return reason
+        }
+    }
+
+    var blockedKind: BlockedCommandKind? {
+        switch self {
+        case .allowed:
+            return nil
+        case .blocked(_, let kind):
+            return kind
+        }
+    }
+}
+
+enum BlockedCommandKind: Equatable {
+    case paused
+    case mode
 }

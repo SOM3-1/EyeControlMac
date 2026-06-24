@@ -58,16 +58,6 @@
 			);
 			target = 4A259E782FEBB71200429068 /* EyeControlMac */;
 		};
-		4ABD84942FEBB8D2008E6FE7 /* Exceptions for "EyeControlMac" folder in "EyeControlMacUITests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				AppState.swift,
-				Assets.xcassets,
-				ContentView.swift,
-				EyeControlMacApp.swift,
-			);
-			target = 4A259E8F2FEBB71400429068 /* EyeControlMacUITests */;
-		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -85,7 +75,6 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				4ABD84932FEBB8D2008E6FE7 /* Exceptions for "EyeControlMac" folder in "EyeControlMac" target */,
-				4ABD84942FEBB8D2008E6FE7 /* Exceptions for "EyeControlMac" folder in "EyeControlMacUITests" target */,
 			);
 			path = EyeControlMac;
 			sourceTree = "<group>";
@@ -198,7 +187,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				4A259E932FEBB71400429068 /* EyeControlMacUITests */,
-				4ABD848F2FEBB8D1008E6FE7 /* EyeControlMac */,
 			);
 			name = EyeControlMacUITests;
 			packageProductDependencies = (

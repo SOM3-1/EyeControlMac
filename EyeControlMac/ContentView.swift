@@ -29,6 +29,7 @@ struct ContentView: View {
 
             VStack(alignment: .leading, spacing: 18) {
                 header
+                modeControls
 
                 if appState.isCommandOverlayVisible {
                     CommandOverlayView()
@@ -77,6 +78,48 @@ struct ContentView: View {
                 Text("\(appState.controlMode.title) Mode")
                     .foregroundStyle(.secondary)
             }
+        }
+    }
+
+    private var modeControls: some View {
+        HStack(spacing: 12) {
+            Text("Control Mode")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.secondary)
+
+            Picker("Control Mode", selection: controlModeBinding) {
+                Text("Reading").tag(ControlMode.reading)
+                Text("Desktop").tag(ControlMode.desktop)
+            }
+            .pickerStyle(.segmented)
+            .frame(width: 240)
+
+            Text(modeDescription)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
+
+            Spacer()
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 8))
+    }
+
+    private var controlModeBinding: Binding<ControlMode> {
+        Binding {
+            appState.controlMode == .desktop ? .desktop : .reading
+        } set: { newValue in
+            appState.setControlMode(newValue)
+        }
+    }
+
+    private var modeDescription: String {
+        switch appState.controlMode {
+        case .desktop:
+            return "Window commands are available after Space confirmation."
+        default:
+            return "Window commands are disabled; document-safe commands remain available when active."
         }
     }
 

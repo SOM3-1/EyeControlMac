@@ -10,11 +10,26 @@ import Combine
 
 @MainActor
 final class ActionExecutor: ObservableObject {
+    private let scrollController: ScrollControlling
+    private let pageNavigationController: PageNavigationControlling
+
+    init() {
+        self.scrollController = ScrollController()
+        self.pageNavigationController = PageNavigationController()
+    }
+
+    init(scrollController: ScrollControlling, pageNavigationController: PageNavigationControlling) {
+        self.scrollController = scrollController
+        self.pageNavigationController = pageNavigationController
+    }
+
     func execute(_ command: EyeCommand, appState: AppState) {
-        guard appState.canExecute(command) else {
+        let permission = appState.permission(for: command)
+
+        guard permission.isAllowed else {
             appState.markBlocked(
                 command,
-                reason: appState.blockedReason(for: command) ?? "Action is not allowed."
+                reason: permission.blockedReason ?? "Action is not allowed."
             )
             return
         }
@@ -23,27 +38,31 @@ final class ActionExecutor: ObservableObject {
 
         switch command {
         case .scrollUp:
-            message = "Placeholder: Scroll Up"
+            let result = scrollController.scrollUp()
+            message = "Scroll Up event posted; ScrollController called (\(result.debugDescription))"
         case .scrollDown:
-            message = "Placeholder: Scroll Down"
+            let result = scrollController.scrollDown()
+            message = "Scroll Down event posted; ScrollController called (\(result.debugDescription))"
         case .nextPage:
-            message = "Placeholder: Next Page"
+            let strategy = pageNavigationController.nextPage()
+            message = "Next Page executed using \(strategy.debugName)"
         case .previousPage:
-            message = "Placeholder: Previous Page"
+            let strategy = pageNavigationController.previousPage()
+            message = "Previous Page executed using \(strategy.debugName)"
         case .minimizeCurrentWindow:
-            message = "Placeholder: Minimize Current Window"
+            message = "Minimize Current Window placeholder executed"
         case .maximizeCurrentWindow:
-            message = "Placeholder: Maximize Current Window"
+            message = "Maximize Current Window placeholder executed"
         case .switchWindow:
-            message = "Placeholder: Open Window Switcher"
+            message = "Switch Window placeholder executed"
         case .pause:
             message = "Paused eye control"
         case .resume:
             message = "Resumed eye control"
         case .recalibrate:
-            message = "Placeholder: Start Calibration"
+            message = "Recalibrate placeholder executed"
         case .settings:
-            message = "Placeholder: Open Settings"
+            message = "Settings placeholder executed"
         }
 
         appState.markExecuted(command, message: message)

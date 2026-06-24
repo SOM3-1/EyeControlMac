@@ -11,7 +11,7 @@ struct CommandOverlayView: View {
     @EnvironmentObject private var appState: AppState
 
     private let columns = [
-        GridItem(.adaptive(minimum: 128), spacing: 12)
+        GridItem(.adaptive(minimum: 150), spacing: 12)
     ]
 
     var body: some View {
@@ -29,10 +29,12 @@ struct CommandOverlayView: View {
 
             LazyVGrid(columns: columns, spacing: 12) {
                 ForEach(appState.commands) { command in
+                    let permission = appState.permission(for: command)
+
                     CommandButton(
                         command: command,
                         isSelected: appState.selectedCommand == command,
-                        isAllowed: appState.canExecute(command)
+                        permission: permission
                     ) {
                         appState.select(command)
                     }
@@ -47,54 +49,114 @@ struct CommandOverlayView: View {
 private struct CommandButton: View {
     let command: EyeCommand
     let isSelected: Bool
-    let isAllowed: Bool
+    let permission: CommandPermission
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 8) {
-                Image(systemName: command.systemImage)
-                    .frame(width: 18)
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 8) {
+                    Image(systemName: command.systemImage)
+                        .font(.system(size: 15, weight: .semibold))
+                        .frame(width: 20)
 
-                Text(command.title)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
+                    Text(command.title)
+                        .font(.callout.weight(isSelected ? .semibold : .regular))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.78)
 
-                Spacer(minLength: 0)
+                    Spacer(minLength: 0)
+                }
+
+                if let badgeText {
+                    Text(badgeText)
+                        .font(.caption2.weight(.semibold))
+                        .padding(.horizontal, 7)
+                        .padding(.vertical, 3)
+                        .foregroundStyle(badgeForegroundStyle)
+                        .background(badgeBackgroundStyle, in: Capsule())
+                        .lineLimit(1)
+                }
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 10)
-            .frame(minHeight: 44)
+            .frame(minHeight: 62, alignment: .leading)
             .foregroundStyle(foregroundStyle)
             .background(backgroundStyle, in: RoundedRectangle(cornerRadius: 8))
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
-                    .strokeBorder(borderStyle, lineWidth: isSelected ? 2 : 1)
+                    .strokeBorder(borderStyle, lineWidth: isSelected ? 3 : 1)
             }
+            .shadow(
+                color: isSelected ? selectionColor.opacity(0.25) : .clear,
+                radius: isSelected ? 8 : 0,
+                x: 0,
+                y: 4
+            )
         }
         .buttonStyle(.plain)
-        .opacity(isAllowed ? 1 : 0.45)
+        .opacity(permission.isAllowed ? 1 : 0.66)
         .accessibilityLabel(command.title)
+        .accessibilityValue(accessibilityValue)
     }
 
     private var foregroundStyle: Color {
-        isSelected ? .white : .primary
+        if isSelected {
+            return permission.isAllowed ? .white : .primary
+        }
+
+        return permission.isAllowed ? .primary : .secondary
     }
 
     private var backgroundStyle: Color {
         if isSelected {
-            return isAllowed ? .blue : .gray
+            return permission.isAllowed ? selectionColor : Color.orange.opacity(0.22)
         }
 
-        return Color(nsColor: .controlBackgroundColor)
+        if permission.isAllowed {
+            return Color(nsColor: .controlBackgroundColor)
+        }
+
+        return Color(nsColor: .controlBackgroundColor).opacity(0.55)
     }
 
     private var borderStyle: Color {
         if isSelected {
-            return isAllowed ? .blue : .gray
+            return permission.isAllowed ? selectionColor : .orange
         }
 
-        return .secondary.opacity(0.35)
+        return permission.isAllowed ? .secondary.opacity(0.35) : .orange.opacity(0.55)
+    }
+
+    private var selectionColor: Color {
+        .blue
+    }
+
+    private var badgeText: String? {
+        switch permission.blockedKind {
+        case .paused:
+            return command == .resume ? nil : "Paused"
+        case .mode:
+            return "Disabled in mode"
+        case nil:
+            return isSelected ? "Selected" : nil
+        }
+    }
+
+    private var badgeForegroundStyle: Color {
+        permission.isAllowed ? .blue : .orange
+    }
+
+    private var badgeBackgroundStyle: Color {
+        permission.isAllowed ? .white : .orange.opacity(0.14)
+    }
+
+    private var accessibilityValue: String {
+        if permission.isAllowed {
+            return isSelected ? "Selected and available" : "Available"
+        }
+
+        return permission.blockedReason ?? "Unavailable"
     }
 }
 
