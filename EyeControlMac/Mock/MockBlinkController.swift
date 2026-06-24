@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+@MainActor
+struct MockBlinkController {
+    func simulateDoubleBlink(appState: AppState, actionExecutor: ActionExecutor) {
+        appState.handleMockDoubleBlink(actionExecutor: actionExecutor)
+    }
+}

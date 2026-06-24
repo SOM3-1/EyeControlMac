@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4A259EA42FEBB76D00429068 /* AGENTS.md in Sources */ = {isa = PBXBuildFile; fileRef = 4A259EA32FEBB76000429068 /* AGENTS.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,7 +30,7 @@
 		4A259E792FEBB71200429068 /* EyeControlMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EyeControlMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A259E862FEBB71400429068 /* EyeControlMacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EyeControlMacTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A259E902FEBB71400429068 /* EyeControlMacUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EyeControlMacUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4A259EA32FEBB76000429068 /* AGENTS.md */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AGENTS.md; sourceTree = "<group>"; };
+		4A259EA32FEBB76000429068 /* AGENTS.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = AGENTS.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -281,7 +280,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4A259EA42FEBB76D00429068 /* AGENTS.md in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

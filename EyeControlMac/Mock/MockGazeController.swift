@@ -6,3 +6,22 @@
 //
 
 import Foundation
+
+@MainActor
+struct MockGazeController {
+    func moveSelectionUp(appState: AppState) {
+        appState.moveSelection(by: -1)
+    }
+
+    func moveSelectionDown(appState: AppState) {
+        appState.moveSelection(by: 1)
+    }
+
+    func moveSelectionLeft(appState: AppState) {
+        appState.moveSelection(by: -1)
+    }
+
+    func moveSelectionRight(appState: AppState) {
+        appState.moveSelection(by: 1)
+    }
+}
