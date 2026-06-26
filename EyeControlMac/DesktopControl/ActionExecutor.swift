@@ -10,17 +10,14 @@ import Combine
 
 @MainActor
 final class ActionExecutor: ObservableObject {
-    private let scrollController: ScrollControlling
-    private let pageNavigationController: PageNavigationControlling
+    private let documentActionController: DocumentActionControlling
 
     init() {
-        self.scrollController = ScrollController()
-        self.pageNavigationController = PageNavigationController()
+        self.documentActionController = DocumentActionController()
     }
 
-    init(scrollController: ScrollControlling, pageNavigationController: PageNavigationControlling) {
-        self.scrollController = scrollController
-        self.pageNavigationController = pageNavigationController
+    init(documentActionController: DocumentActionControlling) {
+        self.documentActionController = documentActionController
     }
 
     func execute(_ command: EyeCommand, appState: AppState) {
@@ -38,17 +35,21 @@ final class ActionExecutor: ObservableObject {
 
         switch command {
         case .scrollUp:
-            let result = scrollController.scrollUp()
-            message = "Scroll Up event posted; ScrollController called (\(result.debugDescription))"
+            let result = documentActionController.scrollUp()
+            guard applyDocumentResult(result, command: command, appState: appState) else { return }
+            message = "Scroll Up used \(result.strategy.debugName) for \(result.targetAppName ?? "Unknown App")"
         case .scrollDown:
-            let result = scrollController.scrollDown()
-            message = "Scroll Down event posted; ScrollController called (\(result.debugDescription))"
+            let result = documentActionController.scrollDown()
+            guard applyDocumentResult(result, command: command, appState: appState) else { return }
+            message = "Scroll Down used \(result.strategy.debugName) for \(result.targetAppName ?? "Unknown App")"
         case .nextPage:
-            let strategy = pageNavigationController.nextPage()
-            message = "Next Page executed using \(strategy.debugName)"
+            let result = documentActionController.nextPage()
+            guard applyDocumentResult(result, command: command, appState: appState) else { return }
+            message = "Next Page sent \(result.keySent) to \(result.targetAppName ?? "Unknown App") using \(result.strategy.debugName)"
         case .previousPage:
-            let strategy = pageNavigationController.previousPage()
-            message = "Previous Page executed using \(strategy.debugName)"
+            let result = documentActionController.previousPage()
+            guard applyDocumentResult(result, command: command, appState: appState) else { return }
+            message = "Previous Page sent \(result.keySent) to \(result.targetAppName ?? "Unknown App") using \(result.strategy.debugName)"
         case .minimizeCurrentWindow:
             message = "Minimize Current Window placeholder executed"
         case .maximizeCurrentWindow:
@@ -66,5 +67,31 @@ final class ActionExecutor: ObservableObject {
         }
 
         appState.markExecuted(command, message: message)
+    }
+
+    private func applyDocumentResult(
+        _ result: DocumentActionResult,
+        command: EyeCommand,
+        appState: AppState
+    ) -> Bool {
+        appState.documentTargetAppName = result.targetAppName ?? "None"
+        appState.documentTargetPID = result.targetPID.map(String.init) ?? "None"
+        appState.documentTargetSource = result.targetSource.debugName
+        appState.lastDocumentStrategyUsed = result.strategy.debugName
+        appState.lastKeySent = result.keySent
+        appState.lastScrollEvent = result.scrollEvent
+        appState.lastScrollMethod = result.strategy == .directScrollToPid || result.strategy == .fallbackScrollAtMouseLocation ? "CGEvent" : "Keyboard"
+        appState.directPostStatus = result.directPostStatus
+
+        guard result.didSend else {
+            appState.markBlocked(
+                command,
+                reason: result.blockedReason ?? "No document app target found.",
+                includeReasonInLastAction: true
+            )
+            return false
+        }
+
+        return true
     }
 }

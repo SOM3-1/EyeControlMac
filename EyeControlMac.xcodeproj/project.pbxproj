@@ -6,9 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-/* End PBXBuildFile section */
-
 /* Begin PBXContainerItemProxy section */
 		4A259E872FEBB71400429068 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -41,6 +38,7 @@
 				Assets.xcassets,
 				ContentView.swift,
 				DesktopControl/ActionExecutor.swift,
+				DesktopControl/DocumentActionController.swift,
 				DesktopControl/PageNavigationController.swift,
 				DesktopControl/ScrollController.swift,
 				DesktopControl/WindowController.swift,
@@ -54,6 +52,7 @@
 				UI/CommandOverlayView.swift,
 				UI/DebugPanelView.swift,
 				UI/FloatingResumeView.swift,
+				Utilities/BackgroundControlManager.swift,
 				Utilities/CooldownManager.swift,
 			);
 			target = 4A259E782FEBB71200429068 /* EyeControlMac */;

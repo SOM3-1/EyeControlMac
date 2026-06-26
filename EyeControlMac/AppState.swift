@@ -17,6 +17,20 @@ final class AppState: ObservableObject {
     @Published var selectedCommand: EyeCommand = .resume
     @Published var lastAction: String = "App started in Paused Mode"
     @Published var lastBlockedReason: String?
+    @Published var documentTargetAppName = "None"
+    @Published var documentTargetPID = "None"
+    @Published var documentTargetSource = "None"
+    @Published var lastKeySent = "None"
+    @Published var lastScrollEvent = "None"
+    @Published var lastScrollMethod = "None"
+    @Published var lastDocumentStrategyUsed = "None"
+    @Published var directPostStatus = "Not attempted"
+    @Published var isBackgroundControlEnabled = false
+    @Published var isGlobalShortcutManagerStarted = false
+    @Published var registeredHotkeysCount = 0
+    @Published var hotkeyRegistrationStatuses: [String] = []
+    @Published var lastGlobalShortcut = "None"
+    @Published var backgroundControlStatus = "Not started"
     @Published var mockDoubleBlinkCount = 0
 
     let commands = EyeCommand.overlayCommands
@@ -106,9 +120,9 @@ final class AppState: ObservableObject {
         }
     }
 
-    func markBlocked(_ command: EyeCommand, reason: String) {
+    func markBlocked(_ command: EyeCommand, reason: String, includeReasonInLastAction: Bool = false) {
         lastBlockedReason = reason
-        lastAction = "Blocked \(command.title)"
+        lastAction = includeReasonInLastAction ? "Blocked \(command.title): \(reason)" : "Blocked \(command.title)"
     }
 }
 

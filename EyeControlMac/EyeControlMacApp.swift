@@ -5,18 +5,49 @@
 //  Created by Dushyanth N Gowda on 6/24/26.
 //
 
+import AppKit
 import SwiftUI
+
+@MainActor
+final class EyeControlMacAppDelegate: NSObject, NSApplicationDelegate {
+    let appState = AppState()
+    let actionExecutor = ActionExecutor()
+    let globalShortcutManager = GlobalShortcutManager()
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        globalShortcutManager.start(
+            appState: appState,
+            actionExecutor: actionExecutor
+        )
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        globalShortcutManager.stop()
+    }
+}
 
 @main
 struct EyeControlMacApp: App {
-    @StateObject private var appState = AppState()
-    @StateObject private var actionExecutor = ActionExecutor()
+    @NSApplicationDelegateAdaptor(EyeControlMacAppDelegate.self) private var appDelegate
+
+    private var appState: AppState {
+        appDelegate.appState
+    }
+
+    private var actionExecutor: ActionExecutor {
+        appDelegate.actionExecutor
+    }
+
+    private var globalShortcutManager: GlobalShortcutManager {
+        appDelegate.globalShortcutManager
+    }
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(appState)
                 .environmentObject(actionExecutor)
+                .environmentObject(globalShortcutManager)
         }
         .commands {
             CommandMenu("Eye Control") {
